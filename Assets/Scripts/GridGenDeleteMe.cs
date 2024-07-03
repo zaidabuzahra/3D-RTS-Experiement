@@ -7,7 +7,6 @@ public class GridGenDeleteMe : MonoBehaviour
     private int width, height;
     public static Cell[,] grid;
 
-    public ProceduralGenDeleteMe experiment;
     private void Awake()
     {
         grid = new Cell[width, height];
@@ -16,17 +15,16 @@ public class GridGenDeleteMe : MonoBehaviour
         {
             for (int z = 0; z < height; z++)
             {
-#pragma warning disable IDE0090
-                Vector3 position = new Vector3(x, 0, z);
+                //Vector3 position = new Vector3(x, 0, z);
                 #pragma warning restore IDE0090
                 grid[x, z] = new Cell(false, CellType.ground/*, position*/);
-                Debug.DrawLine(position, new Vector3(x, 0, z + 1), Color.white, 100f);
-                Debug.DrawLine(position, new Vector3(x + 1, 0, z), Color.white, 100f);
+                /*Debug.DrawLine(position, new Vector3(x, 0, z + 1), Color.white, 100f);
+                Debug.DrawLine(position, new Vector3(x + 1, 0, z), Color.white, 100f);*/
             }
         }
 
-        Debug.DrawLine(new Vector3(0, 0, height), new Vector3(width, 0, height), Color.white, 100f);
-        Debug.DrawLine(new Vector3(width, 0, 0), new Vector3(width, 0, height), Color.white, 100f);
+        /*Debug.DrawLine(new Vector3(0, 0, height), new Vector3(width, 0, height), Color.white, 100f);
+        Debug.DrawLine(new Vector3(width, 0, 0), new Vector3(width, 0, height), Color.white, 100f);*/
     }
 
     public static void PlaceItem(EntityOS entity, Vector3Int mousePos)

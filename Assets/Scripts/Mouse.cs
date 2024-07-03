@@ -1,12 +1,12 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
+using static UnityEngine.InputSystem.Controls.AxisControl;
 
 public class Mouse : MonoBehaviour
 {
     [SerializeField]
     private GameObject mouse;
-    [SerializeField]
-    private GUIStyle mouseSelectBoxStyle;
     [SerializeField]
     private LayerMask mouseLayerMask;
 
@@ -21,9 +21,6 @@ public class Mouse : MonoBehaviour
 
     private Vector3 clickPosition;
     private Vector3 mouseCurrentPos, mousePos;
-
-    private bool isDragging;
-    private float dragTimer;
 
     private void Update()
     {
@@ -50,12 +47,11 @@ public class Mouse : MonoBehaviour
 
     private void MouseRay()
     {
+        mouse.SetActive(GameManager.gameState == GameState.Build);
         if (EventSystem.current.IsPointerOverGameObject()) return;
 
         mousePos = Input.mousePosition;
         Ray ray = cam.ScreenPointToRay(mousePos);
-
-        dragTimer -= Time.deltaTime;
 
         if (Physics.Raycast(ray, out RaycastHit rayHit, 999f, mouseLayerMask))
         {
@@ -65,32 +61,37 @@ public class Mouse : MonoBehaviour
             //Input actions will be taken out from here to an input manager as well as using the new input system
             if (Input.GetMouseButtonDown(0))
             {
-                dragTimer = 0.5f;
                 clickPosition = rayHit.point;
-                if (GameManager.gameState == GameState.Build)
-                {
-                    GridGenDeleteMe.PlaceItem(entityData, new Vector3Int((int)clickPosition.x, (int)clickPosition.y, (int)clickPosition.z));
-                    return;
-                }
-                else
-                {
-                    if (rayHit.transform.gameObject.GetComponent<Agent>() != null)
-                    {
-                        AgentSignals.Instance.onSelectAgent?.Invoke(rayHit.transform.gameObject);
-                    }
-                    else Debug.LogWarning(rayHit.transform.gameObject.name);
-                }
-            }
 
-            if (dragTimer > 0.2f && dragTimer < 0.4f)
-            {
-                isDragging = true;
-            }
+                switch (GameManager.gameState)
+                {
+                    case GameState.Build:
+                        GridGenDeleteMe.PlaceItem(entityData, new Vector3Int((int)clickPosition.x, (int)clickPosition.y, (int)clickPosition.z));
+                        break;
 
-            if (Input.GetMouseButtonUp(0))
-            {
-                isDragging = false;
-                dragTimer = 0;
+                    case GameState.Manage:
+                        //Check if shift is pressed, if so don't do anything, else just have the selected agents be diselected
+                        if (!Input.GetKey(KeyCode.LeftShift))
+                        {
+                            //Unselect the selected agents
+                            AgentSignals.Instance.onDeselectAgents?.Invoke();
+                        }
+
+                        if (rayHit.transform.gameObject.GetComponent<Agent>() != null)
+                        {
+                            //Update UI, agent's highlights, and add the agent to the list of selected agents
+                            AgentSignals.Instance.onSelectAgent?.Invoke(rayHit.transform.gameObject);
+                        }
+
+                        else
+                        {
+                            //This will later be responsible for the buildings to respond, although it is prefered to combine them as Entity
+                            Debug.LogWarning(rayHit.transform.gameObject.name);
+                        }
+                        break;
+
+                    default: break;
+                }
             }
         }
 
@@ -105,6 +106,15 @@ public class Mouse : MonoBehaviour
         float clampX = Mathf.Min(Screen.width, mousePos.x);
         float clampY = Mathf.Min(Screen.height, mousePos.y);
 
+        verticalSpeed = CameraVerticalMovement(verticalSpeed, clampX);
+        horizontalSpeed = CameraHorizontalMovement(horizontalSpeed, clampY);
+
+        Vector3 movement = new Vector3(Mathf.Abs(verticalSpeed), 0, Mathf.Abs(horizontalSpeed)).normalized;
+        cam.transform.position += new Vector3(verticalSpeed * movement.x * Time.deltaTime, 0, horizontalSpeed * movement.z * Time.deltaTime);
+    }
+
+    private float CameraVerticalMovement(float verticalSpeed, float clampX)
+    {
         if (mousePos.x > Screen.width - padding && cam.transform.position.x < 90)
         {
             float min = Screen.width - padding;
@@ -116,6 +126,12 @@ public class Mouse : MonoBehaviour
             verticalSpeed = -cameraSpeed * Mathf.Abs(clampX - padding);
         }
 
+        verticalSpeed = Mathf.Clamp(verticalSpeed, -cameraSpeed * 100, cameraSpeed * 100);
+        return verticalSpeed;
+    }
+
+    private float CameraHorizontalMovement(float horizontalSpeed, float clampY)
+    {
         if (mousePos.y > Screen.height - padding && cam.transform.position.z < 90)
         {
             float min = Screen.height - padding;
@@ -128,29 +144,11 @@ public class Mouse : MonoBehaviour
         }
 
         horizontalSpeed = Mathf.Clamp(horizontalSpeed, -cameraSpeed * 100, cameraSpeed * 100);
-        verticalSpeed = Mathf.Clamp(verticalSpeed, -cameraSpeed * 100, cameraSpeed * 100);
-
-        Vector3 movement = new Vector3(Mathf.Abs(verticalSpeed), 0, Mathf.Abs(horizontalSpeed)).normalized;
-        cam.transform.position += new Vector3(verticalSpeed * movement.x * Time.deltaTime, 0, horizontalSpeed * movement.z * Time.deltaTime);
+        return horizontalSpeed;
     }
 
     public Vector3 GetMousePosition()
     {
         return mouse.transform.position;
-    }
-
-    private void OnGUI()
-    {
-        if (isDragging)
-        {
-            float BoxWidth = cam.WorldToScreenPoint(clickPosition).x - cam.WorldToScreenPoint(mouseCurrentPos).x;
-            float BoxHeight = cam.WorldToScreenPoint(clickPosition).y - cam.WorldToScreenPoint(mouseCurrentPos).y;
-            float boxRight = (Screen.height - Input.mousePosition.y) - BoxHeight;
-            GUI.Box(new Rect(
-                mousePos.x,
-                boxRight,
-                BoxWidth,
-                BoxHeight), "", mouseSelectBoxStyle);
-        }
     }
 }

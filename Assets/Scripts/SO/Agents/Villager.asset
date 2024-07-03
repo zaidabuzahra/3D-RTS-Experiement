@@ -18,6 +18,7 @@ MonoBehaviour:
   damage: 1
   speed: 10
   radius: 1
-  entityPrefab: {fileID: 0}
+  entityPrefab: {fileID: 2523686458261341615, guid: 9e7276488d7e39e4c961d1068f0a1cba,
+    type: 3}
   entityImage: {fileID: 0}
   type: 0
