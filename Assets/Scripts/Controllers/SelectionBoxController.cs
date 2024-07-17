@@ -82,7 +82,7 @@ public class SelectionBoxController : MonoBehaviour
                 highlightedAgents.Add(agent);
                 AgentSignals.Instance.onHighlightAgent(agent.gameObject, true);
             }
-            else if (!isInBox && highlightedAgents.Contains(agent) && !Input.GetKey(KeyCode.LeftShift))
+            else if (!isInBox && highlightedAgents.Contains(agent))
             {
                 highlightedAgents.Remove(agent);
                 AgentSignals.Instance.onHighlightAgent(agent.gameObject, false);

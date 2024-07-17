@@ -5,10 +5,16 @@ public class GridGenDeleteMe : MonoBehaviour
 {
     [SerializeField]
     private int width, height;
+    [SerializeField]
+    private GenerateTexture terrainT;
+
     public static Cell[,] grid;
+
+    private static GenerateTexture terrainST;
 
     private void Awake()
     {
+        terrainST = terrainT;
         grid = new Cell[width, height];
 
         for (int x = 0; x < width; x++)
@@ -39,6 +45,7 @@ public class GridGenDeleteMe : MonoBehaviour
                 }
             }
             Instantiate(entity.entityPrefab, mousePos, Quaternion.identity);
+            terrainST.ChangeTerrainTexture(mousePos, entity.entitySize.x * 4, entity.entitySize);
         }
     }
 
