@@ -5,11 +5,8 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Agent", menuName = "Agnet/AgentEntity")]
 public class AgentSO : ScriptableObject
 {
-    public string entityName;
-    public sbyte entityID;
+    public EntityOS entity;
     public double health, damage, speed, radius;
-    public GameObject entityPrefab;
-    public Sprite entityImage;
     public AgentType type;
 }
 
