@@ -11,4 +11,5 @@ public class EntityOS : ScriptableObject
     public Vector2Int entitySize;
     public GameObject entityPrefab;
     public Sprite entityImage;
+    public int wtf;
 }

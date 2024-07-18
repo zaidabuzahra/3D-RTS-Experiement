@@ -3,6 +3,7 @@ using Signals;
 using UnityEngine.UI;
 using TMPro;
 using Sirenix.OdinInspector;
+using System.Collections.Generic;
 
 public class UIManager : MonoBehaviour
 {
@@ -28,7 +29,7 @@ public class UIManager : MonoBehaviour
     private void OnEnable()
     {
         BuildSignals.Instance.onSelectEntity += OnSelectNewEntity;
-        //UISignals.Instance.onEntityRemove += OnEntityRemove;
+        AgentSignals.Instance.onDeselectAgents += OnEntityRemove;
     }
 
     private void OnDisable()
@@ -43,7 +44,7 @@ public class UIManager : MonoBehaviour
         BuildSignals.Instance.onSelectEntity?.Invoke(entity);
     }
 
-    public void ShowObject(GameObject toShow)
+    public void ShowChoices(GameObject toShow)
     {
         toShow.SetActive(true);
     }

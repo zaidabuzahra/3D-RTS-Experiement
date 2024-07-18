@@ -10,11 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5e610b43053c2d2468f69ed44d745709, type: 3}
-  m_Name: 4x4
+  m_Name: House
   m_EditorClassIdentifier: 
-  entityName: Big
-  entityID: 2
-  entitySize: {x: 4, y: 4}
-  entityPrefab: {fileID: 2523686458261341615, guid: 7cbb42e28e77b5545a085542e1595c55,
+  entityName: House
+  entityID: 0
+  entitySize: {x: 2, y: 2}
+  entityPrefab: {fileID: 4598389257566738267, guid: f95c8869c3c23574aaf1107e79c7c18f,
     type: 3}
-  entityImage: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  entityImage: {fileID: 21300000, guid: 94604159ea6b5004b891ba4c235a51c6, type: 3}
+  wtf: 0

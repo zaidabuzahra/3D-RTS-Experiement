@@ -10,11 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5e610b43053c2d2468f69ed44d745709, type: 3}
-  m_Name: 2x2
+  m_Name: Villager
   m_EditorClassIdentifier: 
-  entityName: Cube
-  entityID: 0
-  entitySize: {x: 2, y: 2}
-  entityPrefab: {fileID: 4598389257566738267, guid: f95c8869c3c23574aaf1107e79c7c18f,
+  entityName: Villager
+  entityID: 1
+  entitySize: {x: 0, y: 0}
+  entityPrefab: {fileID: 9019309860572254997, guid: 83d4650641f16b84aa15fdbad2396009,
     type: 3}
-  entityImage: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  entityImage: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  wtf: 0

@@ -19,7 +19,6 @@ public class Mouse : MonoBehaviour
     [SerializeField]
     private Camera cam;
 
-    private Vector3 clickPosition;
     private Vector3 mouseCurrentPos, mousePos;
 
     private void Update()
@@ -56,17 +55,16 @@ public class Mouse : MonoBehaviour
         if (Physics.Raycast(ray, out RaycastHit rayHit, 999f, mouseLayerMask))
         {
             mouseCurrentPos = rayHit.point;
+            mouseCurrentPos.y = 0;
 
             //This function should only be responsible for mouse position on the grid. 
             //Input actions will be taken out from here to an input manager as well as using the new input system
             if (Input.GetMouseButtonDown(0))
             {
-                clickPosition = rayHit.point;
-
                 switch (GameManager.gameState)
                 {
                     case GameState.Build:
-                        GridGenDeleteMe.PlaceItem(entityData, new Vector3Int((int)clickPosition.x, (int)clickPosition.y, (int)clickPosition.z));
+                        GridGenDeleteMe.PlaceItem(entityData, new Vector3Int((int)mouseCurrentPos.x, (int)mouseCurrentPos.y, (int)mouseCurrentPos.z));
                         break;
 
                     case GameState.Manage:
